@@ -65,4 +65,5 @@ jobs:
       run: |
         echo "$ECR_REGISTRY"
         echo "$ECR_REPOSITORY"
+        docker images
         docker push 730335465971.dkr.ecr.ap-southeast-1.amazonaws.com/demo-app:latest
