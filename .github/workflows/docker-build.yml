@@ -41,7 +41,7 @@ jobs:
       env:
         ECR_REGISTRY_URL_SECRET: ${{ secrets.ECR_REGISTRY_URL }}
       run: |
-        docker build -t "$ECR_REGISTRY_URL_SECRET:latest" .
+        docker build -t 730335465971.dkr.ecr.ap-southeast-1.amazonaws.com/demo-app:latest .
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
