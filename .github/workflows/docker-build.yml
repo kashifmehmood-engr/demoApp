@@ -41,7 +41,7 @@ jobs:
       env:
         ECR_REGISTRY_URL_SECRET: ${{ secrets.ECR_REGISTRY_URL }}
       run: |
-        docker build -t "$ECR_REGISTRY_URL_SECRET:${GITHUB_SHA}" .
+        docker build -t "$ECR_REGISTRY_URL_SECRET:latest" .
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
@@ -63,4 +63,4 @@ jobs:
         ECR_REPOSITORY: ${{ secrets.REPOSITORY }}
         IMAGE_TAG: ${GITHUB_SHA}
       run: |
-        docker push "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+        docker push "$ECR_REGISTRY/$ECR_REPOSITORY:latest"
