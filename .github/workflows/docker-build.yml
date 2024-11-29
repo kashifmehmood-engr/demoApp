@@ -72,7 +72,7 @@ jobs:
         REPOSITORY: ${{ secrets.REPOSITORY }}
         IMAGE_TAG: ${{ github.sha }}
       with:
-        image-ref:  "$ECR_REGISTRY/$REPOSITORY:${IMAGE_TAG}"
+        image-ref:  "${{ env.ECR_REGISTRY }}/${{ env.REPOSITORY }}:${{ env.IMAGE_TAG }}"
         format: 'table'
         exit-code: '1'
         ignore-unfixed: true
