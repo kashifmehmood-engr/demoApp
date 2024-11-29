@@ -85,8 +85,8 @@ jobs:
     # Step 5: Deploy Helm Chart
     - name: Deploy Helm Chart to EKS
       run: |
-        helm upgrade --install  demo-app ./helm/demo-app \
+        helm upgrade --install  demo-app helm/demo-app \
           --namespace default \
           --set image.repository=$GITHUB_REPOSITORY \
           --set image.tag=${{ github.sha }} \
-          --values ./helm/demo-app/values.yaml  
+          --values helm/demo-app/values.yaml  
