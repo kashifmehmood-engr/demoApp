@@ -1,0 +1,51 @@
+{{- if .Values.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "demo-app.name" . }}
+  labels:
+    {{- include "demoApp.labels" . | nindent 4 }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  # Add annotations for AWS Load Balancer
+  annotations:
+    # Enable the AWS Load Balancer Controller
+    ingress.k8s.aws/load-balancer-type: "nlb"  # For Network Load Balancer (you can use "alb" for Application Load Balancer)
+    ingress.k8s.aws/scheme: "internet-facing"  # Use "internal" if the LB should be internal
+    ingress.k8s.aws/healthcheck-path: "/healthz"  # Optional: Health check path for the AWS load balancer
+    ingress.k8s.aws/ssl-redirect: "false"  # Optional: Disable SSL redirection if needed (works with ALB)
+spec:
+  {{- with .Values.ingress.className }}
+  ingressClassName: {{ . }}
+  {{- end }}
+  {{- if .Values.ingress.tls }}
+  tls:
+    {{- range .Values.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+  {{- end }}
+  rules:
+    {{- range .Values.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            {{- with .pathType }}
+            pathType: {{ . }}
+            {{- end }}
+            backend:
+              service:
+                name: {{ include "demo-app.fullname" $ }}
+                port:
+                  number: {{ $.Values.service.port }}
+          {{- end }}
+    {{- end }}
+{{- end }}
+
