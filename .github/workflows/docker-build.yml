@@ -70,25 +70,23 @@ jobs:
         docker push "$ECR_REGISTRY/$REPOSITORY:${IMAGE_TAG}"
       
     
-      - name: Update kubeconfig for EKS cluster
-        shell: bash
-        env:
-          REGION: ${{ secrets.AWS_REGION }}
-          CLUSTER: ${{ secrets.EKS_CLUSTER }}
-        run: |
-          aws eks update-kubeconfig --region $REGION --name $CLUSTER
-
-      # Step 4: Install Helm
-      - name: Install Helm
-      
-        run: |
-          curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
-
-      # Step 5: Deploy Helm Chart
-      - name: Deploy Helm Chart to EKS
-        run: |
-          helm upgrade --install  demo-app helm/demo-app/ \
-            --namespace default \
-            --set image.repository=$GITHUB_REPOSITORY \
-            --set image.tag=${{ github.sha }} \
-            --values values.yaml  # Pass a values.yaml file if needed
+    - name: Update kubeconfig for EKS cluster
+      shell: bash
+      env:
+        REGION: ${{ secrets.AWS_REGION }}
+        CLUSTER: ${{ secrets.EKS_CLUSTER }}
+      run: |
+        aws eks update-kubeconfig --region $REGION --name $CLUSTER
+    # Step 4: Install Helm
+    - name: Install Helm
+    
+      run: |
+        curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+    # Step 5: Deploy Helm Chart
+    - name: Deploy Helm Chart to EKS
+      run: |
+        helm upgrade --install  demo-app helm/demo-app/ \
+          --namespace default \
+          --set image.repository=$GITHUB_REPOSITORY \
+          --set image.tag=${{ github.sha }} \
+          --values values.yaml  # Pass a values.yaml file if needed
