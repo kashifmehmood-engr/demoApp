@@ -67,6 +67,10 @@ jobs:
         docker push "$ECR_REGISTRY/$REPOSITORY:${IMAGE_TAG}"
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@0.28.0
+      env:
+        ECR_REGISTRY: ${{ secrets.ECR_REGISTRY_URL }}
+        REPOSITORY: ${{ secrets.REPOSITORY }}
+        IMAGE_TAG: ${{ github.sha }}
       with:
         image-ref:  "$ECR_REGISTRY/$REPOSITORY:${IMAGE_TAG}"
         format: 'table'
@@ -89,8 +93,10 @@ jobs:
         curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
     # Step 5: Deploy Helm Chart
     - name: Deploy Helm Chart to EKS
+      env:
+        ECR_REGISTRY: ${{ secrets.ECR_REGISTRY_URL }}
+        REPOSITORY: ${{ secrets.REPOSITORY }}
       run: |
-        ls 
         helm upgrade --install  demo-app ./helm/demo-app \
           --namespace default \
           --set image.repository=$ECR_REGISTRY/$REPOSITORY \
