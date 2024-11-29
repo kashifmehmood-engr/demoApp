@@ -9,7 +9,7 @@
 1. Workflow will run automatically when you push the code to main branch
 
 ## How to use makefile
-1. Replace $(ECR_REGISTRY), $(REPOSITORY), $(GITHUB_SHA), $(AWS_REGION), and $(EKS_CLUSTER_NAME) with the actual environment variables or secret values you want to use for your environment.
+1. Replace $(ECR_REGISTRY), $(REPOSITORY), $(IMAGE_TAG), $(AWS_REGION), and $(EKS_CLUSTER_NAME) with the actual environment variables or secret values you want to use for your environment.
 2. Ensure the AWS CLI and Helm are properly installed on your system or CI/CD environment.
 3. This `Makefile` contains several targets for deploying and managing Helm charts on your Kubernetes cluster. Below is an overview of each target and how to use it.
 

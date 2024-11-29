@@ -3,7 +3,7 @@ HELM_CHART_PATH=./helm/demo-app
 RELEASE_NAME=my-release
 NAMESPACE=default
 IMAGE_REPOSITORY=$(ECR_REGISTRY)/$(REPOSITORY)
-IMAGE_TAG=$(GITHUB_SHA)
+IMAGE_TAG=$(IMAGE_TAG)
 VALUES_FILE=./helm/demo-app/values.yaml
 
 # Ensure you have a kubeconfig to interact with EKS (via AWS CLI)
