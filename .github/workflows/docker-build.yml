@@ -64,9 +64,6 @@ jobs:
         REPOSITORY: ${{ secrets.REPOSITORY }}
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        echo "$ECR_REGISTRY"
-        echo "$ECR_REPOSITORY"
-        docker images
         docker push "$ECR_REGISTRY/$REPOSITORY:${IMAGE_TAG}"
       
     
@@ -84,9 +81,13 @@ jobs:
         curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
     # Step 5: Deploy Helm Chart
     - name: Deploy Helm Chart to EKS
+      env:
+        ECR_REGISTRY: ${{ secrets.ECR_REGISTRY_URL }}
+        REPOSITORY: ${{ secrets.REPOSITORY }}
+        IMAGE_TAG: ${{ github.sha }}
       run: |
         helm upgrade --install  demo-app helm/demo-app \
           --namespace default \
-          --set image.repository=$GITHUB_REPOSITORY \
+          --set image.repository=$ECR_REGISTRY/$REPOSITORY \
           --set image.tag=${{ github.sha }} \
           --values helm/demo-app/values.yaml  
