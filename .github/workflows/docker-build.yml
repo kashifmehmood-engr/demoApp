@@ -39,9 +39,10 @@ jobs:
     # Step 4: Build the Docker image
     - name: Build Docker image
       env:
-        ECR_REGISTRY_URL_SECRET: ${{ secrets.ECR_REGISTRY_URL }}
+        ECR_REGISTRY: ${{ secrets.ECR_REGISTRY_URL }}
+        REPOSITORY: ${{ secrets.REPOSITORY }}
       run: |
-        docker build -t 730335465971.dkr.ecr.ap-southeast-1.amazonaws.com/demo-app:latest .
+        docker build -t "$ECR_REGISTRY"/"$REPOSITORY":"${{GITHUB_SHA}}" .
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
@@ -59,11 +60,11 @@ jobs:
       id: build-publish
       shell: bash
       env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: ${{ secrets.REPOSITORY }}
-        IMAGE_TAG: ${GITHUB_SHA}
+        ECR_REGISTRY: ${{ secrets.ECR_REGISTRY_URL }}
+        REPOSITORY: ${{ secrets.REPOSITORY }}
+        IMAGE_TAG: ${{GITHUB_SHA}}
       run: |
         echo "$ECR_REGISTRY"
         echo "$ECR_REPOSITORY"
         docker images
-        docker push 730335465971.dkr.ecr.ap-southeast-1.amazonaws.com/demo-app:latest
+        docker push $ECR_REGISTRY/$REPOSITORY$:$IMAGE_TAG
